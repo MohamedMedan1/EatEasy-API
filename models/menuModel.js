@@ -6,57 +6,67 @@ const menuSchema = new mongoose.Schema({
     required: [true, "Please provide item name!"],
     minlength: [3, "Menu item name should be at least 3 characters"],
   },
-  price: {
-    type: Number,
-    required: [true, "Please provide item price!"],
-  },
+  prices: [
+    {
+      price: {
+        type: Number,
+        required: [true, "Please provide item price!"],
+      },
+      size: {
+        type: String,
+        required: [true, "Please provide item size!"],
+      },
+    },
+  ],
   discount: {
     type: Number,
     default: 0,
     validate: {
       validator: function (value) {
-        if (this.price) {
-          return value <= this.price;
-        }
-        return true;
+        return value <=100;
       },
-      message: "Discount price should be less than or equal the item price!",
+      message: "Discount price should be less than or equal 100%",
     },
   },
-  totalPrice: {
-    type: Number,
-  },
+  totalPrices: [
+    {
+      price: {
+        type: Number,
+        required: [true, "Please provide item price!"],
+      },
+      size: {
+        type: String,
+        required: [true, "Please provide item size!"],
+      },
+    },
+  ],
   image: {
     type: String,
     required: [true, "Please provide menu item image!"],
   },
-  ingredients: {
-    ar: [{
+  ingredients: [
+    {
       name: {
-        type: String,
-        required: [true, "Please provide Arabic ingredients"],
+        ar: {
+          type: String,
+          required: [true, "Please provide Arabic ingredients"],
+        },
+        en: {
+          type: String,
+          required: [true, "Please provide English ingredients"],
+        },
       },
       emoji: {
         type: String,
         required: [true, "Please provide ingredient emoji!"],
       },
-    }],
-    en: [{
-      name: {
-        type: String,
-        required: [true, "Please provide English ingredients"],
-      },
-      emoji: {
-        type: String,
-        required: [true, "Please provide ingredient emoji!"],
-      },
-    }],
-  },
+    },
+  ],
   isSoldout: {
     type: Boolean,
     default: false,
   },
-  size: {
+  sizes: {
     type: [String],
     required: [true, "Please provide menu item size"],
     enum: {
@@ -86,5 +96,5 @@ const menuSchema = new mongoose.Schema({
   },
 });
 
-const menuModel = mongoose.model("Menu", menuSchema);
-module.exports = menuModel;
+const Menu = mongoose.model("Menu", menuSchema);
+module.exports = Menu;

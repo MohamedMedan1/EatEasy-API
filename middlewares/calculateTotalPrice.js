@@ -1,26 +1,28 @@
-const catchAsync = require("../utils/catchAsync");
-const Menu = require("../models/menuModel");
-const AppError = require("../utils/appError");
+const calculateTotalPrice =(req, res, next) => {
 
-const calculateTotalPrice = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const menuItem = await Menu.findById(id);
+  let itemPrices = req.body.prices;
+  if (typeof req.body?.prices === "string") {
+    itemPrices = JSON.parse(req.body.prices)
+  }
 
-  if (req.body.price !== undefined || req.body.discount !== undefined) {
-    const price = Number(req.body?.price ?? (menuItem?.price || 0));
-    const discount = Number(req.body?.discount ?? (menuItem?.discount || 0));
+  const discount = Number(req.body?.discount) ?? 0;
+  const totalPrices = [];
 
-    if (price < discount) {
-      return next(
-        new AppError(
-          `Item discount:${discount} should be less than or equal the item price:${price} `
-        )
-      );
+  if (itemPrices.length > 0) {
+    if (discount > 0) {
+      for (let i = 0; i < itemPrices.length; i++){
+        const totalPrice ={}
+        totalPrice.price = itemPrices[i].price - Math.round((itemPrices[i].price * discount) / 100);
+        totalPrice.size = itemPrices[i].size;
+        totalPrices.push(totalPrice);
+      }
+      req.body.totalPrices = totalPrices;
     }
-
-    req.body.totalPrice = price - discount;
+    else {
+      req.body.totalPrices = itemPrices;
+    }
   }
   next();
-});
+};
 
 module.exports = calculateTotalPrice;
