@@ -1,5 +1,6 @@
 const Menu = require("../models/menuModel");
 const Stock = require("../models/stockModel");
+const catchAsync = require("../utils/catchAsync");
 
 const applySoldoutItems = catchAsync(async (req, res, next) => {
   const finishedStockIds = await Stock.find({ quantity: 0 }).select("_id"); //array of ids
