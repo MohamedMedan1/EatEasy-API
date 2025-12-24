@@ -44,6 +44,12 @@ const menuSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please provide menu item image!"],
   },
+  category: {
+    type: String,
+    required: [true, "Please provide menu item category"],
+    minlength:[4,"Menu item category must be at least 4 characters"],
+    maxlength:[12,"Menu item category must be at most 12 characters"],
+  },
   ingredients: [
     {
       name: {
@@ -68,11 +74,11 @@ const menuSchema = new mongoose.Schema({
   },
   sizes: {
     type: [String],
-    required: [true, "Please provide menu item size"],
     enum: {
-      values: ["sm", "m", "lg", "xl"],
-      message: "Item size can be only (sm, m, lg, xl)",
+      values: ["regular","small", "medium", "large", "x large"],
+      message: "Item size can be only (regular,small, medium, large, x large)",
     },
+    default:["regular"],
     validate: {
       validator: function (value) {
         return value.length > 0;

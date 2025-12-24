@@ -13,10 +13,7 @@ exports.getAllOrders = catchAsync(async (req, res, next) => {
 });
 
 exports.createNewOrder = catchAsync(async (req, res, next) => {
-  // const newOrder = await Orders.create(req.body);
-  const newOrder = {};
-  // console.log(req.body);
-
+  const newOrder = await Orders.create(req.body);
   res.status(201).json({
     status: "success",
     data: newOrder,

@@ -7,6 +7,10 @@ const orderSchema = new mongoose.Schema({
       required: [true, "Please provide cart item name!"],
       minlength:[3,"Cart item name must be at least 3 charachters"],
     },
+    notes: {
+      type: String,
+      maxlength:[200,"Order notes must be less than or equal 200 characters"]
+    },
     price: {
       type: Number,
       requried:[true,"please provide item total price (price - discount)!"],
